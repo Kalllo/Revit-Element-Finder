@@ -64,6 +64,43 @@ namespace JPMorrow.RevitElementSearch {
             var ids = coll.OfCategory(bic).Where(x => has_value(x)).Select(x => x.Id);
             return ids;
         }
+
+        public static IEnumerable<Parameter> GetParametersForQuery(ModelInfo info, ElementQuery q) {
+            var el = info.DOC.GetElement(q.CollectedElement);
+            return el.GetOrderedParameters();
+        }
+
+        public static IEnumerable<string[]> GetParameterNamesAndValues(IEnumerable<Parameter> parameters) {
+
+            var param_strs = new List<string[]>();
+
+            foreach(var p in parameters) {
+                if(p == null || !p.HasValue) continue;
+
+                string str = p.AsString();
+                double? dbl = p.AsDouble();
+                int? i = p.AsInteger();
+                string val_str = p.AsValueString();
+                string[] add = null;
+
+                bool t(params ParameterType[] x) => x.Any(y => y == p.Definition.ParameterType) ;
+
+                if(t(ParameterType.Text) && !string.IsNullOrWhiteSpace(str)) 
+                    add = new[] { p.Definition.Name, p.AsString() };
+                else if(!string.IsNullOrWhiteSpace(val_str)) 
+                    add = new[] { p.Definition.Name, p.AsValueString() };
+                else if(t(ParameterType.Number) && dbl != null && dbl.HasValue) 
+                    add = new[] { p.Definition.Name, p.AsDouble().ToString() };
+                else if(t(ParameterType.Integer) && i != null && i.HasValue) 
+                    add = new[] { p.Definition.Name, p.AsInteger().ToString() };
+                else
+                    add = new[] { p.Definition.Name, "UNSET" };
+
+                if(add != null) param_strs.Add(add);
+            }
+
+            return param_strs;
+        }
     }
 
     public class ElementQuery {

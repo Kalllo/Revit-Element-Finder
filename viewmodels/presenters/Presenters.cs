@@ -55,7 +55,48 @@ namespace JPMorrow.UI.ViewModels
             public bool IsSelected { get => _isSelected;
                 set {
                     _isSelected = value;
-                    Update("Run_Items");
+                    Update("IsSelected");
+            }}
+        }
+
+        /// <summary>
+        /// Search Query List Binding
+        /// </summary>
+        public class ParameterPresenter : Presenter
+        {
+            public string[] Value;
+            public ParameterPresenter(string[] value, ModelInfo info)
+            {
+                Value = value;
+                RefreshDisplay(info);
+            }
+
+            public void RefreshDisplay(ModelInfo info)
+            {
+                Name = Value[0];
+                ContainedValue = Value[1];
+            }
+
+            private string n;
+            public string Name {get => n;
+            set {
+                n = value;
+                Update("Name");
+            }}
+
+            private string cv;
+            public string ContainedValue {get => cv;
+            set {
+                cv = value;
+                Update("ContainedValue");
+            }}
+
+            //Item Selection Bindings
+            private bool _isSelected;
+            public bool IsSelected { get => _isSelected;
+                set {
+                    _isSelected = value;
+                    Update("IsSelected");
             }}
         }
 

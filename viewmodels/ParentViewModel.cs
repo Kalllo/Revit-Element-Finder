@@ -13,6 +13,7 @@ namespace JPMorrow.UI.ViewModels
     using ObsStr = om.ObservableCollection<string>;
     using ObsSearchQuery = om.ObservableCollection<ParentViewModel.ElementQueryPresenter>;
     using ObsView = om.ObservableCollection<ParentViewModel.ViewPresenter>;
+    using ObsParam = om.ObservableCollection<ParentViewModel.ParameterPresenter>;
 
     public partial class ParentViewModel : Presenter
     {
@@ -20,6 +21,7 @@ namespace JPMorrow.UI.ViewModels
 
         // observable collections
         public ObsSearchQuery SearchQueryItems { get; set; } = new ObsSearchQuery();
+        public ObsParam ParameterItems { get; set; } = new ObsParam();
         public ObsView ViewItems { get; set; } = new ObsView();
         public ObsStr BICItems { get; set; } = new ObsStr();
 

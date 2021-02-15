@@ -48,10 +48,16 @@ namespace JPMorrow.UI.ViewModels
             
             try {
                 var selected = SearchQueryItems.Where(x => x.IsSelected).ToList();
-                if(!selected.Any()) return;
+                if (!selected.Any()) return;
 
                 var query = selected.First().Value;
                 var views = ViewFinder.GetViewsThatContainElement(Info, query.CollectedElement);
+                var pp = ElementSearch.GetParametersForQuery(Info, query);
+                var parameter_strs = ElementSearch.GetParameterNamesAndValues(pp);
+
+                ParameterItems.Clear();
+                parameter_strs.ForEach(x => ParameterItems.Add(new ParameterPresenter(x, Info)));
+                Update("ParameterItems");
 
                 ViewItems.Clear();
                 views.ForEach(x => ViewItems.Add(new ViewPresenter(x, Info)));
@@ -60,7 +66,6 @@ namespace JPMorrow.UI.ViewModels
             catch(Exception ex) {
                 debugger.show(header:"Search Selection Changed", err:ex.ToString());
             }
-            
         }
 
         public void ViewSelectionChanged(Window window) {
